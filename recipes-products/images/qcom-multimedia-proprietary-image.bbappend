@@ -23,6 +23,7 @@ CORE_IMAGE_BASE_INSTALL:append = "${@bb.utils.contains('DISTRO_FEATURES', 'ros2-
     packagegroup-robotics-proprietary \
 ', '', d)}"
 
-# QIRP 依赖接线：proprietary 分支挂 3 个包组（与 psdk-image.bbclass python() 的
-# "proprietary" 分支逐字一致）。覆盖 .inc 里的默认单包组值。
-ROBOTICS_QIRP_PKGGROUPS = "packagegroup-robotics-opensource packagegroup-oss-with-prop-deps packagegroup-robotics-proprietary"
+# QIRP 依赖接线由 psdk-image.bbclass 统一提供：该 class 的 python() 里
+# `"proprietary" in pn` 分支对本镜像 PN(qcom-multimedia-proprietary-image) 天然成立，
+# 故自动挂三包组(robotics-opensource / oss-with-prop-deps / robotics-proprietary)，
+# 本文件无需再覆盖任何包组列表。
