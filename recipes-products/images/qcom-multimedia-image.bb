@@ -4,6 +4,17 @@ SUMMARY = "Basic Wayland image with Weston"
 
 IMAGE_FEATURES += "weston"
 
+# Optional robotics content (ROS 2, QIRP SDK, qrb-ros), contributed by the
+# meta-qcom-robotics-sdk component layer and turned on by the "ros2-jazzy"
+# distro feature. This recipe only probes for the feature - exactly as it
+# already does for "x11" below - while the package set behind it lives in
+# FEATURE_PACKAGES_ros2-jazzy (conf/distro/include/qcom-distro-robotics.inc).
+# The weak default keeps "ros2-jazzy" a valid image feature even when the
+# robotics layer is absent, so a stray DISTRO_FEATURES entry degrades to "no
+# extra packages" instead of making this recipe unparsable.
+FEATURE_PACKAGES_ros2-jazzy ??= ""
+IMAGE_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', 'ros2-jazzy', 'ros2-jazzy', '', d)}"
+
 CORE_IMAGE_BASE_INSTALL += " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'weston-xwayland xterm', '', d)} \
     alsa-utils-alsatplg \

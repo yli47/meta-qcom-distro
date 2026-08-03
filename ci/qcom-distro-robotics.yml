@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+
+header:
+  version: 14
+  includes:
+  - ci/qcom-distro.yml
+
+repos:
+  meta-qcom-robotics-sdk:
+    url: https://github.com/qualcomm-linux/meta-qcom-robotics-sdk
+    branch: main
+
+  meta-ros:
+    url: https://github.com/ros/meta-ros.git
+    branch: master
+    layers:
+      meta-ros-common:
+      meta-ros2:
+      meta-ros2-jazzy:
+    patches:
+      qcom-fixes1:
+        repo: meta-qcom-robotics-sdk
+        path: patches/0001-jazzy-remove-outdated-bbappend-and-patches-of-stomp.patch
+      qcom-fixes2:
+        repo: meta-qcom-robotics-sdk
+        path: patches/0002-jazzy-update-libdir-of-ompl.patch
+      qcom-fixes3:
+        repo: meta-qcom-robotics-sdk
+        path: patches/0003-jazzy-move-some-nav2-and-moveit-packages-out-of-blac.patch
+      ament_cmake_py_fix:
+        repo: meta-qcom-robotics-sdk
+        path: patches/0001-ros2-ament_cmake-add-python-configurations-for-class.patch
+      remove-rosbag2-compressionn-zstd-bbappend:
+        repo: meta-qcom-robotics-sdk
+        path: patches/0001-fix-remove-bbappend-and-patch-for-rosbag2-compressio.patch
+    commit: 7c0bded4f8b2962ff1a0e6e74cb622c06f5255ce
+
+  oe-core:
+    patches:
+      fix-BSD-license-missing:
+        repo: meta-qcom-robotics-sdk
+        path: patches/Initial-commit-of-license.patch
+
+local_conf_header:
+  libcamera_mask: |
+    BBMASK .= "|^${TOPDIR}/meta-ros/meta-ros-common/recipes-multimedia/libcamera/.*"
+    PREFERRED_VERSION_libcamera = "1:0.6.0"
+
+distro: qcom-distro-robotics
+
+target:
+  - qcom-multimedia-image
+  - qcom-multimedia-proprietary-image
