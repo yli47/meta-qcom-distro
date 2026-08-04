@@ -24,6 +24,7 @@ CORE_IMAGE_BASE_INSTALL += " \
 "
 CORE_IMAGE_BASE_INSTALL:append = " \
     ${@bb.utils.contains('BBFILE_COLLECTIONS', 'meta-audioreach', ' packagegroup-audioreach', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'ros2-jazzy', 'packagegroup-oss-with-prop-deps packagegroup-robotics-proprietary', '', d)} \
 "
 
 TOOLCHAIN_HOST_TASK:append = " nativesdk-protobuf-camx-compiler"
